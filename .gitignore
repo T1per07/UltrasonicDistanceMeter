@@ -1,0 +1,23 @@
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build
+*.o
+*.elf
+*.bin
+*.hex
+build/
+*.pyc
+__pycache__/
+
+# Arduino
+*.ino.cpp
+.preferred-arduino-ide-version
