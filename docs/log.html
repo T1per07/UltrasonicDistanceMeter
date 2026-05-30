@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>超声波测距仪 - 开发日志</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans SC', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .profile-card {
+            background: var(--bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .profile-card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-card p {
+            color: var(--text-light);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--primary);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: var(--bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.35rem;
+            top: 1.5rem;
+            width: 12px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+
+        .timeline-item h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-item .time {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-item p {
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-item .fail {
+            color: var(--danger);
+            font-style: italic;
+        }
+
+        .timeline-item .success {
+            color: var(--success);
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tech-item {
+            background: var(--bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .tech-item h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .tech-item ul {
+            list-style: none;
+        }
+
+        .tech-item li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tech-item li:last-child {
+            border-bottom: none;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Fira Code', 'Consolas', monospace;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .bug-list {
+            list-style: none;
+        }
+
+        .bug-list li {
+            background: var(--bg);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--danger);
+        }
+
+        .bug-list li h3 {
+            color: var(--danger);
+            margin-bottom: 0.5rem;
+        }
+
+        .bug-list li .solution {
+            color: var(--success);
+            margin-top: 0.5rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>超声波测距仪</h1>
+        <p>《从代码到实物：造你所想》期末 Hackathon 项目</p>
+        <nav style="margin-top: 1rem;">
+            <a href="#profile" style="color: white; margin: 0 1rem; text-decoration: none;">项目简介</a>
+            <a href="#design-log" style="color: white; margin: 0 1rem; text-decoration: none;">开发日志</a>
+            <a href="#tech-stack" style="color: white; margin: 0 1rem; text-decoration: none;">技术栈</a>
+            <a href="#gallery" style="color: white; margin: 0 1rem; text-decoration: none;">项目照片</a>
+            <a href="#design-thinking" style="color: white; margin: 0 1rem; text-decoration: none;">设计思维</a>
+            <a href="#reflections" style="color: white; margin: 0 1rem; text-decoration: none;">反思总结</a>
+            <a href="#future" style="color: white; margin: 0 1rem; text-decoration: none;">未来改进</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Project Profile -->
+        <section class="section" id="profile">
+            <h2>Project Profile</h2>
+            <div class="profile-grid">
+                <div class="profile-card">
+                    <h3>项目名称</h3>
+                    <p>超声波测距仪</p>
+                    <p><strong>一句话定义：</strong>基于 ESP32-C3 的便携式测距设备，实时显示距离并提供声光报警。</p>
+                </div>
+                <div class="profile-card">
+                    <h3>团队成员</h3>
+                    <p><strong>吴天鹏</strong> - 项目负责人，硬件搭建，嵌入式编程</p>
+                    <p><strong>符永儒</strong> - 电路设计，焊接调试</p>
+                    <p><strong>司淼清</strong> - 外壳设计，3D建模</p>
+                    <p><strong>吴辉</strong> - 文档编写，测试验证</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Design Log -->
+        <section class="section" id="design-log">
+            <h2>Design Log（时间轴）</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3>周六上午 - 需求分析与方案设计</h3>
+                    <div class="time">2026年5月30日 9:00 - 12:00</div>
+                    <p>确定项目方向：超声波测距仪</p>
+                    <p>完成硬件选型：ESP32-C3 + HC-SR04 + SSD1306</p>
+                    <p>绘制系统架构图和接线方案</p>
+                    <p class="fail">初版方案使用 Arduino Nano，后发现库存不足，改为 ESP32-C3</p>
+                </div>
+
+                <div class="timeline-item">
+                    <h3>周六下午 - 硬件搭建与调试</h3>
+                    <div class="time">2026年5月30日 13:00 - 17:00</div>
+                    <p>完成面包板电路搭建</p>
+                    <p>编写超声波测距基础代码</p>
+                    <p class="fail">遇到问题：HC-SR04 读数不稳定，距离值跳动大</p>
+                    <p class="success">解决方案：增加中值滤波，取10次测量的中位数</p>
+                </div>
+
+                <div class="timeline-item">
+                    <h3>周六晚间 - 功能完善</h3>
+                    <div class="time">2026年5月30日 18:00 - 21:00</div>
+                    <p>集成 OLED 显示功能</p>
+                    <p>添加蜂鸣器和 LED 报警逻辑</p>
+                    <p class="fail">OLED 显示花屏，I2C 地址冲突</p>
+                    <p class="success">重新扫描 I2C 地址，确认为 0x3C，修改代码后正常</p>
+                </div>
+
+                <div class="timeline-item">
+                    <h3>周日上午 - 外壳设计与组装</h3>
+                    <div class="time">2026年5月31日 9:00 - 12:00</div>
+                    <p>使用 Fusion 360 设计外壳</p>
+                    <p>3D 打印外壳主体</p>
+                    <p class="fail">第一版外壳尺寸偏小，传感器无法安装</p>
+                    <p class="success">修改参数，加大 2mm，重新打印成功</p>
+                </div>
+
+                <div class="timeline-item">
+                    <h3>周日下午 - 整体测试与调试</h3>
+                    <div class="time">2026年5月31日 13:00 - 16:00</div>
+                    <p>完成整体组装</p>
+                    <p>进行功能测试和距离校准</p>
+                    <p class="success">最终产品稳定工作，测距精度达到 ±1cm</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack -->
+        <section class="section" id="tech-stack">
+            <h2>Tech Stack & Code</h2>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <h3>硬件清单</h3>
+                    <ul>
+                        <li>ESP32-C3 开发板 × 1</li>
+                        <li>HC-SR04 超声波传感器 × 1</li>
+                        <li>SSD1306 OLED 显示屏 0.96寸 × 1</li>
+                        <li>有源蜂鸣器 × 1</li>
+                        <li>红色 LED × 1</li>
+                        <li>220Ω 电阻 × 1</li>
+                        <li>面包板 × 1</li>
+                        <li>杜邦线若干</li>
+                    </ul>
+                </div>
+                <div class="tech-item">
+                    <h3>软件工具</h3>
+                    <ul>
+                        <li>Arduino IDE 2.x</li>
+                        <li>Fusion 360（外壳设计）</li>
+                        <li>Git（版本控制）</li>
+                        <li>PlatformIO（可选）</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; color: var(--primary);">核心代码</h3>
+            <div class="code-block">
+                <pre>
+float measureDistance() {
+    digitalWrite(TRIG_PIN, LOW);
+    delayMicroseconds(2);
+    digitalWrite(TRIG_PIN, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(TRIG_PIN, LOW);
+
+    long duration = pulseIn(ECHO_PIN, HIGH, 30000);
+    if (duration == 0) return -1;
+
+    float distance = duration * 0.034 / 2;
+    return (distance > MAX_DISTANCE) ? -1 : distance;
+}
+                </pre>
+            </div>
+
+            <div class="code-block">
+                <pre>
+void alertFeedback(float distance) {
+    if (distance <= DANGER_DISTANCE) {
+        digitalWrite(LED_PIN, HIGH);
+        tone(BUZZER_PIN, 1000, 100);
+        delay(150);
+        tone(BUZZER_PIN, 1500, 100);
+        delay(150);
+    } else if (distance <= WARNING_DISTANCE) {
+        digitalWrite(LED_PIN, HIGH);
+        tone(BUZZER_PIN, 800, 200);
+        delay(300);
+    } else {
+        digitalWrite(BUZZER_PIN, LOW);
+        digitalWrite(LED_PIN, LOW);
+    }
+}
+                </pre>
+            </div>
+        </section>
+
+        <!-- Photo Gallery -->
+        <section class="section" id="gallery">
+            <h2>项目照片</h2>
+            <div class="profile-grid">
+                <div class="profile-card">
+                    <h3>电路搭建</h3>
+                    <p>面包板上的超声波测距电路</p>
+                    <p style="color: var(--text-light); font-style: italic;">[照片待添加：assets/images/circuit.jpg]</p>
+                </div>
+                <div class="profile-card">
+                    <h3>外壳设计</h3>
+                    <p>Fusion 360 建模与 3D 打印</p>
+                    <p style="color: var(--text-light); font-style: italic;">[照片待添加：assets/images/case.jpg]</p>
+                </div>
+                <div class="profile-card">
+                    <h3>最终成品</h3>
+                    <p>组装完成的超声波测距仪</p>
+                    <p style="color: var(--text-light); font-style: italic;">[照片待添加：assets/images/final.jpg]</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Design Thinking -->
+        <section class="section" id="design-thinking">
+            <h2>设计思维</h2>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <h3>问题定义</h3>
+                    <p>在日常生活中，人们经常需要快速测量距离，但传统卷尺使用不便，且难以测量远距离或难以触及的位置。我们希望设计一款便携、直观的测距设备。</p>
+                </div>
+                <div class="tech-item">
+                    <h3>解决方案</h3>
+                    <p>利用超声波测距技术，结合 ESP32-C3 的低功耗特性和 OLED 显示屏的直观显示，打造一款能够实时显示距离并提供声光报警的便携式测距仪。</p>
+                </div>
+                <div class="tech-item">
+                    <h3>创新点</h3>
+                    <ul>
+                        <li>分级报警系统（安全/警告/危险）</li>
+                        <li>中值滤波算法提升测量稳定性</li>
+                        <li>3D 打印定制外壳，美观便携</li>
+                        <li>低功耗设计，适合长时间使用</li>
+                    </ul>
+                </div>
+                <div class="tech-item">
+                    <h3>应用场景</h3>
+                    <ul>
+                        <li>室内装修测量</li>
+                        <li>工业生产中的距离监测</li>
+                        <li>智能小车避障</li>
+                        <li>盲人辅助导航</li>
+                        <li>智能垃圾桶感应开盖</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reflections -->
+        <section class="section" id="reflections">
+            <h2>Reflections - 遇到的 Bug 与解决方案</h2>
+            <ul class="bug-list">
+                <li>
+                    <h3>Bug 1: 超声波读数不稳定</h3>
+                    <p><strong>现象：</strong>HC-SR04 返回的距离值在实际距离附近大幅跳动，误差超过 10cm。</p>
+                    <p><strong>原因：</strong>单次测量受环境噪声影响大，超声波反射不稳定。</p>
+                    <p class="solution"><strong>解决：</strong>实现中值滤波算法，连续采集 10 个数据，取中位数作为有效值。同时增加超时处理，避免无效读数。</p>
+                </li>
+                <li>
+                    <h3>Bug 2: OLED 显示花屏</h3>
+                    <p><strong>现象：</strong>SSD1306 显示屏出现乱码或全白屏。</p>
+                    <p><strong>原因：</strong>I2C 总线地址配置错误，实际地址为 0x3C 而非默认的 0x3D。</p>
+                    <p class="solution"><strong>解决：</strong>使用 I2C Scanner 程序扫描总线，确认正确地址后修改代码。</p>
+                </li>
+                <li>
+                    <h3>Bug 3: 蜂鸣器不响</h3>
+                    <p><strong>现象：</strong>代码逻辑正确，但蜂鸣器无声音输出。</p>
+                    <p><strong>原因：</strong>ESP32-C3 的 tone() 函数与 Arduino 标准库行为不同，需要指定通道。</p>
+                    <p class="solution"><strong>解决：</strong>改用 ledcSetup() 和 ledcWrite() 函数，配置 PWM 通道驱动蜂鸣器。</p>
+                </li>
+                <li>
+                    <h3>Bug 4: 外壳尺寸不匹配</h3>
+                    <p><strong>现象：</strong>3D 打印的外壳无法容纳传感器和显示屏。</p>
+                    <p><strong>原因：</strong>建模时未考虑接线空间和公差。</p>
+                    <p class="solution"><strong>解决：</strong>重新测量实际组件尺寸，每边增加 2mm 余量，添加走线槽设计。</p>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Future Improvements -->
+        <section class="section" id="future">
+            <h2>未来改进方向</h2>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <h3>硬件升级</h3>
+                    <ul>
+                        <li>更换为更高精度的超声波传感器</li>
+                        <li>添加温度传感器进行声速补偿</li>
+                        <li>使用锂电池供电，增加便携性</li>
+                        <li>添加蓝牙模块，实现手机连接</li>
+                    </ul>
+                </div>
+                <div class="tech-item">
+                    <h3>软件优化</h3>
+                    <ul>
+                        <li>实现多点测量取平均值</li>
+                        <li>添加历史数据记录功能</li>
+                        <li>开发配套手机 App</li>
+                        <li>增加语音播报功能</li>
+                    </ul>
+                </div>
+                <div class="tech-item">
+                    <h3>产品化</h3>
+                    <ul>
+                        <li>设计更精美的外壳</li>
+                        <li>优化电路板布局</li>
+                        <li>增加防水设计</li>
+                        <li>批量生产可行性分析</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Demo -->
+        <section class="section" id="demo">
+            <h2>演示视频</h2>
+            <div class="profile-card" style="text-align: center; padding: 3rem;">
+                <h3>产品演示</h3>
+                <p style="color: var(--text-light); font-style: italic; margin-top: 1rem;">[视频待添加：assets/video/demo.mp4]</p>
+                <p style="margin-top: 1rem;">演示超声波测距仪的实际使用效果</p>
+            </div>
+        </section>
+
+        <!-- Learning Outcomes -->
+        <section class="section" id="learning">
+            <h2>学习收获</h2>
+            <div class="tech-stack">
+                <div class="tech-item">
+                    <h3>技术技能</h3>
+                    <ul>
+                        <li>掌握 ESP32-C3 嵌入式开发</li>
+                        <li>学会使用超声波传感器进行测距</li>
+                        <li>理解 I2C 通信协议</li>
+                        <li>掌握 PWM 控制蜂鸣器的方法</li>
+                        <li>学会 3D 建模和打印技术</li>
+                    </ul>
+                </div>
+                <div class="tech-item">
+                    <h3>工程实践</h3>
+                    <ul>
+                        <li>从需求分析到产品落地的完整流程</li>
+                        <li>硬件与软件的协同开发</li>
+                        <li>问题定位与调试技巧</li>
+                        <li>团队协作与分工配合</li>
+                        <li>项目管理与时间规划</li>
+                    </ul>
+                </div>
+                <div class="tech-item">
+                    <h3>课程知识点应用</h3>
+                    <ul>
+                        <li>嵌入式系统设计</li>
+                        <li>传感器数据采集与处理</li>
+                        <li>人机交互界面设计</li>
+                        <li>电路设计与焊接</li>
+                        <li>产品原型设计方法</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- GitHub Link -->
+        <section class="section" id="github">
+            <h2>代码仓库</h2>
+            <div class="profile-card" style="text-align: center; padding: 2rem;">
+                <h3>GitHub 仓库</h3>
+                <p style="margin-top: 1rem;">
+                    <a href="https://github.com/yourusername/UltrasonicDistanceMeter" target="_blank" style="color: var(--primary); text-decoration: none; font-size: 1.2rem;">
+                        🔗 UltrasonicDistanceMeter
+                    </a>
+                </p>
+                <p style="color: var(--text-light); margin-top: 0.5rem;">包含完整源代码、文档和开发日志</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>《从代码到实物：造你所想》2026 春季学期 | 超声波测距仪项目组</p>
+        <p>© 2026 All Rights Reserved</p>
+    </footer>
+</body>
+</html>
