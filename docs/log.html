@@ -508,9 +508,9 @@ Serial.println(" cm");
         <!-- 分隔线：半期项目开始 -->
         <!-- ============================================ -->
 
-        <div style="text-align: center; margin: 3rem 0; padding: 2rem; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 1.5rem; color: white;">
-            <h2 style="color: white; border: none; margin: 0;">📋 半期项目</h2>
-            <p style="margin-top: 0.5rem; color: #e0e7ff;">以下为个人半期项目开发日志</p>
+        <div id="midterm" style="text-align: center; margin: 3rem 0; padding: 2rem; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 1.5rem; color: white;">
+            <h2 style="color: white; border: none; margin: 0;">📋 期中项目</h2>
+            <p style="margin-top: 0.5rem; color: #e0e7ff;">以下为期中项目开发日志</p>
         </div>
 
         <!-- 半期项目：爱丽丝语音助手 -->
@@ -846,6 +846,292 @@ void setRGB(int r, int g, int b) {
                         <li>设计3D打印外壳，做成桌面摆件</li>
                     </ul>
                 </li>
+            </ul>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- 各周模块开始 -->
+        <!-- ============================================ -->
+
+        <div style="text-align: center; margin: 3rem 0; padding: 2rem; background: linear-gradient(135deg, #0ea5e9, #2563eb); border-radius: 1.5rem; color: white;">
+            <h2 style="color: white; border: none; margin: 0;">📚 各周模块日志</h2>
+            <p style="margin-top: 0.5rem; color: #bfdbfe;">以下为课程各周次的学习记录与实践</p>
+        </div>
+
+        <!-- Week 1: 计算机辅助设计 -->
+        <h2 style="border-color: #0ea5e9;" id="week1">📐 Week 1 · 计算机辅助设计（CAD）</h2>
+        <div class="card">
+            <p><strong>本周目标：</strong> 学习使用 Fusion 360 进行三维建模，完成第一个零件设计。</p>
+            <p><strong>主要内容：</strong></p>
+            <ul style="margin-left: 1.5rem;">
+                <li>Fusion 360 界面熟悉：草图、拉伸、旋转、倒角</li>
+                <li>参数化设计思维：尺寸约束、几何约束</li>
+                <li>工程图导出：三视图、剖视图标注</li>
+            </ul>
+        </div>
+        <div class="card timeline">
+            <div class="timeline-item">
+                <strong>周三 · 软件安装与环境配置</strong>
+                安装 Fusion 360，注册教育版账号。第一次打开软件，界面比较复杂，花了半小时熟悉各个面板。
+            </div>
+            <div class="timeline-item">
+                <strong>周四 · 草图绘制练习</strong>
+                学习草图工具：直线、圆、矩形、样条曲线。练习画一个简单的法兰盘。
+                <br><span class="bug-tag">🔥 踩坑：草图没有完全约束（变成绿色），拉伸时出现扭曲。解决：检查每个尺寸和约束是否标注完整。</span>
+            </div>
+            <div class="timeline-item">
+                <strong>周五 · 完成第一个零件</strong>
+                设计了一个简单的手机支架，使用拉伸、抽壳、倒角等命令。导出 STL 文件用于后续 3D 打印。
+                <br><span class="success-tag">✅ 成果：成功导出 STL，零件尺寸符合预期</span>
+            </div>
+        </div>
+
+        <!-- Week 2: 激光切割 -->
+        <h2 style="border-color: #0ea5e9;" id="week2">✂️ Week 2 · 激光切割</h2>
+        <div class="card">
+            <p><strong>本周目标：</strong> 学习激光切割原理，设计并切割一个亚克力盒子。</p>
+            <p><strong>主要内容：</strong></p>
+            <ul style="margin-left: 1.5rem;">
+                <li>激光切割机工作原理：CO2激光、功率与速度的关系</li>
+                <li>2D设计软件：AutoCAD / CorelDRAW</li>
+                <li>榫卯结构设计：活动铰链、拼接卡扣</li>
+            </ul>
+        </div>
+        <div class="card timeline">
+            <div class="timeline-item">
+                <strong>周三 · 激光切割机操作</strong>
+                学习安全规范（不能切割PVC！会释放氯气），熟悉对焦、调功率、调速度。用废料测试了切割和雕刻两种模式。
+            </div>
+            <div class="timeline-item">
+                <strong>周四 · 设计盒子</strong>
+                用 AutoCAD 画了一个 80x60x40mm 的盒子，四面用榫卯拼接。设计时留了 0.1mm 的间隙补偿。
+                <br><span class="bug-tag">🔥 踩坑：第一版间隙留的太小（0.05mm），亚克力板塞不进去。改大到 0.15mm 后完美拼接。</span>
+            </div>
+            <div class="timeline-item">
+                <strong>周五 · 切割与组装</strong>
+                使用 3mm 亚克力板，功率 60%，速度 15mm/s。切割出来边缘光滑，拼接后结构稳固。
+                <br><span class="success-tag">✅ 成果：激光切割亚克力盒子，可用于后续项目外壳</span>
+            </div>
+        </div>
+
+        <!-- Week 3: 3D扫描与打印 -->
+        <h2 style="border-color: #0ea5e9;" id="week3">🖨️ Week 3 · 3D扫描与打印</h2>
+        <div class="card">
+            <p><strong>本周目标：</strong> 学习 FDM 3D 打印原理，完成模型切片与打印。</p>
+            <p><strong>主要内容：</strong></p>
+            <ul style="margin-left: 1.5rem;">
+                <li>FDM 打印原理：热熔堆积、层高、填充率</li>
+                <li>切片软件：Bambu Studio / Cura</li>
+                <li>支撑结构：何时需要支撑、支撑类型选择</li>
+                <li>3D扫描：结构光扫描、点云处理</li>
+            </ul>
+        </div>
+        <div class="card timeline">
+            <div class="timeline-item">
+                <strong>周三 · 打印机操作</strong>
+                学习 Bambu Lab 打印机的操作：装料、调平、开始打印。第一次看到打印机工作，很神奇。
+            </div>
+            <div class="timeline-item">
+                <strong>周四 · 切片参数调试</strong>
+                测试不同参数：层高 0.1mm vs 0.2mm、填充率 20% vs 50%、有无支撑。发现 0.2mm 层高 + 20% 填充是最平衡的选择。
+                <br><span class="bug-tag">🔥 踩坑：打印一个悬空角度 60° 的模型，没加支撑，中间塌了。以后超过 45° 必须加支撑。</span>
+            </div>
+            <div class="timeline-item">
+                <strong>周五 · 完成打印作品</strong>
+                打印了 Week 1 设计的手机支架，PLA 材质，香芋紫色。打印时间约 2 小时，成品质量不错。
+                <br><span class="success-tag">✅ 成果：第一个 3D 打印实物作品</span>
+            </div>
+        </div>
+
+        <!-- Week 4: 电子设计入门 -->
+        <h2 style="border-color: #0ea5e9;" id="week4">🔌 Week 4 · 电子设计入门（PCB）</h2>
+        <div class="card">
+            <p><strong>本周目标：</strong> 学习使用 KiCad 绘制原理图和 PCB 板。</p>
+            <p><strong>主要内容：</strong></p>
+            <ul style="margin-left: 1.5rem;">
+                <li>电路基础：欧姆定律、串并联、分压电路</li>
+                <li>KiCad 软件：原理图绘制、PCB布局、布线</li>
+                <li>元器件封装：0805电阻、SOT-23三极管、ESP32模组</li>
+            </ul>
+        </div>
+        <div class="card timeline">
+            <div class="timeline-item">
+                <strong>周三 · 电路基础回顾</strong>
+                复习欧姆定律（U=IR），计算 LED 限流电阻值。3.3V 供电，LED 压降 2V，目标电流 15mA → R = (3.3-2)/0.015 ≈ 87Ω，选用 100Ω。
+            </div>
+            <div class="timeline-item">
+                <strong>周四 · KiCad 原理图</strong>
+                绘制 ESP32-C3 最小系统原理图：主控芯片、USB接口、LDO稳压、LED指示灯。
+                <br><span class="bug-tag">🔥 踩坑：找不到 ESP32-C3 的 KiCad 库。解决：从嘉立创下载官方封装库导入。</span>
+            </div>
+            <div class="timeline-item">
+                <strong>周五 · PCB 布局布线</strong>
+                完成 PCB 布局：晶振靠近芯片、USB 差分线等长、地平面完整。布线花了 3 小时。
+                <br><span class="success-tag">✅ 成果：第一块自己设计的 PCB，导出 Gerber 文件</span>
+            </div>
+        </div>
+
+        <!-- Week 5: 电子制作 -->
+        <h2 style="border-color: #0ea5e9;" id="week5">⚡ Week 5 · 电子制作（焊接）</h2>
+        <div class="card">
+            <p><strong>本周目标：</strong> 学习手工焊接技术，制作 Arduino 最小系统板。</p>
+            <p><strong>主要内容：</strong></p>
+            <ul style="margin-left: 1.5rem;">
+                <li>焊接工具：烙铁、焊锡丝、助焊剂、吸锡器</li>
+                <li>焊接技巧：温度控制、焊点质量判断</li>
+                <li>常见焊接问题：虚焊、桥接、冷焊</li>
+            </ul>
+        </div>
+        <div class="card timeline">
+            <div class="timeline-item">
+                <strong>周三 · 焊接练习</strong>
+                先在洞洞板上练习焊接直插元件（电阻、LED）。第一个焊点很丑，焊锡堆成球。助教说要先加热焊盘再送焊锡丝。
+            </div>
+            <div class="timeline-item">
+                <strong>周四 · 贴片焊接</strong>
+                挑战贴片焊接：0805 电阻和 SOT-23 三极管。使用镊子+烙铁，非常考验手稳。
+                <br><span class="bug-tag">🔥 踩坑：0805 电阻焊反了方向（虽然电阻没有极性，但养成好习惯很重要）。虚焊导致电路不通，用万用表逐点检测才找到。</span>
+            </div>
+            <div class="timeline-item">
+                <strong>周五 · 完成最小系统板</strong>
+                焊接 ATmega328P 最小系统板：芯片、晶振、电容、USB 接口。上电后 LED 亮了！
+                <br><span class="success-tag">✅ 成果：手工焊接的 Arduino 最小系统板可以正常工作</span>
+            </div>
+        </div>
+
+        <!-- Week 6: 嵌入式编程 -->
+        <h2 style="border-color: #0ea5e9;" id="week6">💻 Week 6 · 嵌入式编程</h2>
+        <div class="card">
+            <p><strong>本周目标：</strong> 学习 Arduino/ESP32 编程，掌握 GPIO 控制与串口通信。</p>
+            <p><strong>主要内容：</strong></p>
+            <ul style="margin-left: 1.5rem;">
+                <li>Arduino IDE 安装与配置</li>
+                <li>GPIO 输入输出：digitalRead/Write、analogRead/Write</li>
+                <li>串口通信：Serial.begin()、波特率配置</li>
+                <li>ESP32 特性：WiFi、蓝牙、多核</li>
+            </ul>
+        </div>
+        <div class="card timeline">
+            <div class="timeline-item">
+                <strong>周三 · 点亮第一个 LED</strong>
+                写了人生第一个嵌入式程序：Blink。GPIO 输出高低电平，LED 闪烁。虽然简单，但看到硬件被代码控制的感觉很神奇。
+            </div>
+            <div class="timeline-item">
+                <strong>周四 · 串口通信</strong>
+                学习 Serial.println()，在串口监视器里看到 "Hello World"。理解了波特率的概念。
+                <br><span class="bug-tag">🔥 踩坑：串口监视器乱码，波特率设置错误。代码写的 115200，监视器默认 9600。</span>
+            </div>
+            <div class="timeline-item">
+                <strong>周五 · PWM 控制</strong>
+                学习 analogWrite() 实现 PWM 输出，控制 LED 呼吸灯效果。理解了占空比的概念。
+                <br><span class="success-tag">✅ 成果：掌握了嵌入式编程基础，可以控制 GPIO 和串口</span>
+            </div>
+        </div>
+
+        <!-- Week 7: 输入设备 -->
+        <h2 style="border-color: #0ea5e9;" id="week7">📡 Week 7 · 输入设备（传感器）</h2>
+        <div class="card">
+            <p><strong>本周目标：</strong> 学习常见传感器的原理与数据采集方法。</p>
+            <p><strong>主要内容：</strong></p>
+            <ul style="margin-left: 1.5rem;">
+                <li>超声波传感器 HC-SR04：距离测量原理</li>
+                <li>温湿度传感器 DHT11：单总线协议</li>
+                <li>光敏电阻：模拟量采集</li>
+                <li>红外避障传感器：数字量输入</li>
+            </ul>
+        </div>
+        <div class="card timeline">
+            <div class="timeline-item">
+                <strong>周三 · HC-SR04 超声波</strong>
+                学习超声波测距原理：发送 10us 触发信号，测量回波时间，计算距离（距离 = 时间 × 声速 / 2）。第一次测到 25.3cm，非常准确。
+            </div>
+            <div class="timeline-item">
+                <strong>周四 · DHT11 温湿度</strong>
+                连接 DHT11，读取温湿度数据。单总线协议时序很严格，延时不对就读不到数据。
+                <br><span class="bug-tag">🔥 踩坑：DHT11 数据线没有上拉电阻，读数一直失败。加了 4.7kΩ 上拉后正常。</span>
+            </div>
+            <div class="timeline-item">
+                <strong>周五 · 传感器综合测试</strong>
+                同时连接超声波、温湿度、光敏电阻，串口打印所有数据。学会了 millis() 非阻塞延时。
+                <br><span class="success-tag">✅ 成果：掌握了多种传感器的数据采集方法</span>
+            </div>
+        </div>
+
+        <!-- Week 8: 输出设备 -->
+        <h2 style="border-color: #0ea5e9;" id="week8">💡 Week 8 · 输出设备（执行器）</h2>
+        <div class="card">
+            <p><strong>本周目标：</strong> 学习常见输出设备的驱动方法。</p>
+            <p><strong>主要内容：</strong></p>
+            <ul style="margin-left: 1.5rem;">
+                <li>LED 驱动：限流电阻计算、RGB 调色</li>
+                <li>蜂鸣器：有源 vs 无源、PWM 音调</li>
+                <li>OLED 显示屏：I2C 通信、SSD1306 驱动</li>
+                <li>舵机控制：PWM 角度控制</li>
+            </ul>
+        </div>
+        <div class="card timeline">
+            <div class="timeline-item">
+                <strong>周三 · LED 与蜂鸣器</strong>
+                RGB LED 混色实验：红+绿=黄，红+蓝=紫。用 tone() 函数驱动蜂鸣器播放简单旋律。
+            </div>
+            <div class="timeline-item">
+                <strong>周四 · OLED 显示屏</strong>
+                连接 SSD1306 OLED，显示文字和图形。I2C 地址扫描确认是 0x3C。
+                <br><span class="bug-tag">🔥 踩坑：OLED 花屏，I2C 地址写错（0x3D vs 0x3C）。用 I2C Scanner 程序扫描后确认正确地址。</span>
+            </div>
+            <div class="timeline-item">
+                <strong>周五 · 舵机控制</strong>
+                使用 Servo 库控制 SG90 舵机旋转到指定角度（0-180°）。PWM 周期 20ms，脉宽 0.5ms-2.5ms 对应 0°-180°。
+                <br><span class="success-tag">✅ 成果：掌握了 LED、蜂鸣器、OLED、舵机的驱动方法</span>
+            </div>
+        </div>
+
+        <!-- 学期总结 -->
+        <div style="text-align: center; margin: 3rem 0; padding: 2rem; background: linear-gradient(135deg, #10b981, #059669); border-radius: 1.5rem; color: white;">
+            <h2 style="color: white; border: none; margin: 0;">🎓 学期总结</h2>
+        </div>
+        <div class="card">
+            <h3 style="margin-bottom: 1rem;">技能成长</h3>
+            <table>
+                <thead>
+                    <tr><th>类别</th><th>掌握技能</th><th>熟练度</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>CAD 建模</td><td>Fusion 360 零件设计、装配、工程图</td><td>⭐⭐⭐⭐</td></tr>
+                    <tr><td>激光切割</td><td>2D 设计、榫卯结构、参数调试</td><td>⭐⭐⭐⭐</td></tr>
+                    <tr><td>3D 打印</td><td>FDM 打印、切片软件、支撑设计</td><td>⭐⭐⭐⭐⭐</td></tr>
+                    <tr><td>PCB 设计</td><td>KiCad 原理图、PCB 布局布线</td><td>⭐⭐⭐</td></tr>
+                    <tr><td>焊接</td><td>直插/贴片焊接、虚焊检测</td><td>⭐⭐⭐⭐</td></tr>
+                    <tr><td>嵌入式编程</td><td>Arduino/ESP32、GPIO、串口、I2C</td><td>⭐⭐⭐⭐⭐</td></tr>
+                    <tr><td>传感器</td><td>超声波、温湿度、光敏、红外</td><td>⭐⭐⭐⭐</td></tr>
+                    <tr><td>执行器</td><td>LED、蜂鸣器、OLED、舵机</td><td>⭐⭐⭐⭐</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card">
+            <h3 style="margin-bottom: 1rem;">项目成果</h3>
+            <ul style="margin-left: 1.5rem;">
+                <li>✅ <strong>期中项目：</strong> 爱丽丝语音助手（天问板 + 离线语音识别 + 语音合成）</li>
+                <li>✅ <strong>期末项目：</strong> 超声波测距仪（ESP32-C3 + HC-SR04 + LED + 3D 打印外壳）</li>
+                <li>✅ <strong>个人主页：</strong> 完整的开发日志文档</li>
+                <li>✅ <strong>GitHub 仓库：</strong> 代码与文档版本管理</li>
+            </ul>
+        </div>
+        <div class="card">
+            <h3 style="margin-bottom: 1rem;">踩坑总结（全学期共 15+ 个）</h3>
+            <ul style="margin-left: 1.5rem;">
+                <li>🔥 草图未完全约束 → 拉伸扭曲</li>
+                <li>🔥 激光切割间隙太小 → 拼接失败</li>
+                <li>🔥 3D 打印悬空角度过大 → 塌陷</li>
+                <li>🔥 KiCad 找不到元件库 → 手动导入</li>
+                <li>🔥 虚焊导致电路不通 → 万用表检测</li>
+                <li>🔥 串口波特率不匹配 → 乱码</li>
+                <li>🔥 DHT11 缺上拉电阻 → 读数失败</li>
+                <li>🔥 OLED I2C 地址错误 → 花屏</li>
+                <li>🔥 LD3320 买错接口 → 重新购买</li>
+                <li>🔥 SYN6288 供电不足 → 无声音</li>
+                <li>🔥 LED 忘记串联电阻 → 烧毁</li>
+                <li>🔥 超声波读数跳变 → 中位数滤波</li>
             </ul>
         </div>
     </div>
