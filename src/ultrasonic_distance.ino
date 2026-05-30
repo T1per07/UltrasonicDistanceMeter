@@ -1,46 +1,23 @@
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+// ESP32-C3 超声波测距 + 单 LED 提示
+// 团队：吴天鹏、符永儒、司淼清、吴辉
 
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 64
-#define OLED_RESET -1
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+#define TRIG_PIN  4
+#define ECHO_PIN  5
+#define LED_PIN   6
 
-#define TRIG_PIN 2
-#define ECHO_PIN 3
-#define BUZZER_PIN 4
-#define LED_PIN 5
-
-#define MAX_DISTANCE 400
-#define WARNING_DISTANCE 30
-#define DANGER_DISTANCE 10
+#define THRESHOLD 30  // 距离阈值（cm）
 
 void setup() {
   Serial.begin(115200);
-
   pinMode(TRIG_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
-  pinMode(BUZZER_PIN, OUTPUT);
   pinMode(LED_PIN, OUTPUT);
-
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-    Serial.println(F("SSD1306 allocation failed"));
-    for (;;);
-  }
-
-  display.clearDisplay();
-  display.setTextSize(2);
-  display.setTextColor(SSD1306_WHITE);
-  display.setCursor(10, 10);
-  display.println(F("Ultrasonic"));
-  display.setCursor(30, 35);
-  display.println(F("Meter"));
-  display.display();
-  delay(2000);
+  Serial.println("=== 智能超声波防撞提示器 ===");
+  Serial.println("Ready");
 }
 
-float measureDistance() {
+// 单次测距
+float singleMeasure() {
   digitalWrite(TRIG_PIN, LOW);
   delayMicroseconds(2);
   digitalWrite(TRIG_PIN, HIGH);
@@ -48,78 +25,61 @@ float measureDistance() {
   digitalWrite(TRIG_PIN, LOW);
 
   long duration = pulseIn(ECHO_PIN, HIGH, 30000);
-  if (duration == 0) return -1;
-
-  float distance = duration * 0.034 / 2;
-  return (distance > MAX_DISTANCE) ? -1 : distance;
+  if (duration <= 0) return 400;  // 超时返回最大值
+  return duration * 0.034 / 2;
 }
 
-void updateDisplay(float distance) {
-  display.clearDisplay();
-
-  display.setTextSize(1);
-  display.setCursor(0, 0);
-  display.println(F("Distance Meter"));
-
-  display.drawLine(0, 10, 128, 10, SSD1306_WHITE);
-
-  if (distance < 0) {
-    display.setTextSize(2);
-    display.setCursor(15, 25);
-    display.println(F("Out of"));
-    display.setCursor(15, 45);
-    display.println(F("Range!"));
-  } else {
-    display.setTextSize(3);
-    display.setCursor(10, 20);
-    display.print(distance, 1);
-
-    display.setTextSize(2);
-    display.setCursor(95, 30);
-    display.println(F("cm"));
+// 中位数滤波：连续读5次取中间值
+float getStableDistance() {
+  float readings[5];
+  for (int i = 0; i < 5; i++) {
+    readings[i] = singleMeasure();
+    delay(30);
   }
 
-  display.display();
-}
-
-void alertFeedback(float distance) {
-  if (distance < 0) {
-    digitalWrite(BUZZER_PIN, LOW);
-    digitalWrite(LED_PIN, LOW);
-    return;
+  // 冒泡排序
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4 - i; j++) {
+      if (readings[j] > readings[j + 1]) {
+        float temp = readings[j];
+        readings[j] = readings[j + 1];
+        readings[j + 1] = temp;
+      }
+    }
   }
 
-  if (distance <= DANGER_DISTANCE) {
-    digitalWrite(LED_PIN, HIGH);
-    tone(BUZZER_PIN, 1000, 100);
-    delay(150);
-    tone(BUZZER_PIN, 1500, 100);
-    delay(150);
-  } else if (distance <= WARNING_DISTANCE) {
-    digitalWrite(LED_PIN, HIGH);
-    tone(BUZZER_PIN, 800, 200);
-    delay(300);
-    digitalWrite(LED_PIN, LOW);
-    delay(200);
-  } else {
-    digitalWrite(BUZZER_PIN, LOW);
-    digitalWrite(LED_PIN, LOW);
-  }
+  return readings[2];  // 返回中位数
 }
 
 void loop() {
-  float distance = measureDistance();
+  float distance = getStableDistance();
 
-  Serial.print(F("Distance: "));
-  if (distance < 0) {
-    Serial.println(F("Out of range"));
-  } else {
-    Serial.print(distance);
-    Serial.println(F(" cm"));
+  // 过滤异常值
+  if (distance <= 0 || distance > 400) {
+    Serial.println("Out of range");
+    digitalWrite(LED_PIN, LOW);
+    delay(200);
+    return;
   }
 
-  updateDisplay(distance);
-  alertFeedback(distance);
+  // 串口打印距离
+  Serial.print("Distance: ");
+  Serial.print(distance, 1);
+  Serial.print(" cm  ");
+
+  // 简易柱状图
+  int bars = (int)distance / 2;
+  for (int i = 0; i < bars && i < 40; i++) {
+    Serial.print("█");
+  }
+  Serial.println();
+
+  // LED 控制
+  if (distance < THRESHOLD) {
+    digitalWrite(LED_PIN, HIGH);
+  } else {
+    digitalWrite(LED_PIN, LOW);
+  }
 
   delay(200);
 }
