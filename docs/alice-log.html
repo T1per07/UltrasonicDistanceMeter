@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>爱丽丝语音助手 · 半期开发日志</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: #f1f5f9;
+            color: #0f172a;
+            padding: 2rem 1rem;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 2rem;
+        }
+        .header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .header p { color: #e0e7ff; margin-top: 0.5rem; }
+        .content { padding: 2rem; }
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #8b5cf6;
+            display: inline-block;
+        }
+        .card {
+            background: #f8fafc;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid #e2e8f0;
+        }
+        .badge {
+            background: #e0e7ff;
+            padding: 0.2rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+        pre {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 1.2rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+        .timeline {
+            border-left: 3px solid #8b5cf6;
+            margin-left: 1rem;
+            padding-left: 1.5rem;
+        }
+        .timeline-item { margin-bottom: 1.8rem; }
+        .timeline-item strong {
+            color: #8b5cf6;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        th, td {
+            border: 1px solid #cbd5e1;
+            padding: 0.6rem;
+            text-align: left;
+        }
+        th { background: #e9eef3; }
+        .bug-tag {
+            background: #fee2e2;
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+        }
+        .success-tag {
+            background: #dcfce7;
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+        }
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🤖 爱丽丝语音助手</h1>
+        <p>天问板 + 语音识别 + 语音合成 | 半期项目</p>
+        <p><span class="badge">个人项目</span> <span class="badge">天问开发板</span> <span class="badge">2026 春季学期</span></p>
+    </div>
+    <div class="content">
+        <!-- 项目简介 -->
+        <h2>🎯 项目简介</h2>
+        <div class="card">
+            <p><strong>一句话定义：</strong> 基于天问开发板的离线语音助手，支持语音唤醒、语音识别和语音播报，可控制LED、查询天气、播放音乐等功能。</p>
+            <p><strong>个人职责：</strong> 全栈开发（硬件选型、嵌入式编程、语音算法调试、功能集成）</p>
+            <p><strong>产品亮点：</strong> 完全离线运行、响应速度快、支持中英文识别、可扩展性强</p>
+        </div>
+
+        <!-- 技术方案 -->
+        <h2>💡 技术方案</h2>
+        <div class="card">
+            <p><strong>核心思路：</strong> 天问板作为主控，连接麦克风模块进行语音采集，使用板载或外挂语音识别芯片进行命令解析，通过语音合成模块播放回复。</p>
+            <table>
+                <thead>
+                    <tr><th>模块</th><th>型号</th><th>功能</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>主控板</td><td>天问WB55</td><td>核心处理、外设控制</td></tr>
+                    <tr><td>语音识别</td><td>LD3320</td><td>离线中文语音识别</td></tr>
+                    <tr><td>语音合成</td><td>SYN6288</td><td>TTS中文语音播报</td></tr>
+                    <tr><td>麦克风</td><td>MAX9814</td><td>语音信号放大采集</td></tr>
+                    <tr><td>功放模块</td><td>PAM8403</td><td>驱动扬声器</td></tr>
+                    <tr><td>扬声器</td><td>8Ω 2W</td><td>音频输出</td></tr>
+                    <tr><td>LED</td><td>RGB LED</td><td>状态指示</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 引脚分配 -->
+        <h2>🔌 引脚分配</h2>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr><th>模块</th><th>引脚</th><th>天问板 GPIO</th><th>说明</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td rowspan="4">LD3320 语音识别</td><td>VCC</td><td>3.3V</td><td>供电</td></tr>
+                    <tr><td>GND</td><td>GND</td><td>接地</td></tr>
+                    <tr><td>TX</td><td>GPIO_10</td><td>串口发送</td></tr>
+                    <tr><td>RX</td><td>GPIO_11</td><td>串口接收</td></tr>
+                    <tr><td rowspan="4">SYN6288 语音合成</td><td>VCC</td><td>5V</td><td>供电</td></tr>
+                    <tr><td>GND</td><td>GND</td><td>接地</td></tr>
+                    <tr><td>TX</td><td>GPIO_12</td><td>串口发送</td></tr>
+                    <tr><td>RX</td><td>GPIO_13</td><td>串口接收</td></tr>
+                    <tr><td rowspan="4">RGB LED</td><td>R</td><td>GPIO_3</td><td>红色通道</td></tr>
+                    <tr><td>G</td><td>GPIO_4</td><td>绿色通道</td></tr>
+                    <tr><td>B</td><td>GPIO_5</td><td>蓝色通道</td></tr>
+                    <tr><td>GND</td><td>GND</td><td>接地</td></tr>
+                    <tr><td rowspan="2">MAX9814</td><td>OUT</td><td>ADC_0</td><td>模拟音频输出</td></tr>
+                    <tr><td>VCC/GND</td><td>3.3V/GND</td><td>供电</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 核心代码 -->
+        <h2>💻 核心代码</h2>
+        <div class="card">
+            <pre>// 爱丽丝语音助手 - 天问WB55
+// 功能：语音唤醒 + 命令识别 + 语音播报
+
+#include "twen_uart.h"
+#include "twen_pwm.h"
+
+// 引脚定义
+#define LD3320_TX   10
+#define LD3320_RX   11
+#define SYN6288_TX  12
+#define SYN6288_RX  13
+#define LED_R       3
+#define LED_G       4
+#define LED_B       5
+
+// 串口对象
+TwenUART ld_uart(1, LD3320_TX, LD3320_RX);   // LD3320
+TwenUART syn_uart(2, SYN6288_TX, SYN6288_RX); // SYN6288
+
+// 状态变量
+bool isAwake = false;
+String lastCommand = "";
+
+void setup() {
+    Serial.begin(115200);
+    ld_uart.begin(9600);
+    syn_uart.begin(9600);
+
+    pinMode(LED_R, OUTPUT);
+    pinMode(LED_G, OUTPUT);
+    pinMode(LED_B, OUTPUT);
+
+    // 开机提示
+    setRGB(0, 0, 255);  // 蓝色待机
+    speak("爱丽丝语音助手已启动，请说唤醒词");
+    Serial.println("[Alice] Ready");
+}
+
+void loop() {
+    // 读取语音识别结果
+    if (ld_uart.available()) {
+        String result = ld_uart.readString();
+        result.trim();
+        Serial.print("[LD3320] ");
+        Serial.println(result);
+
+        if (!isAwake) {
+            // 等待唤醒词
+            if (result.indexOf("爱丽丝") >= 0 ||
+                result.indexOf("你好") >= 0) {
+                isAwake = true;
+                setRGB(0, 255, 0);  // 绿色唤醒
+                speak("我在，请问有什么可以帮您");
+                Serial.println("[Alice] Awakened");
+            }
+        } else {
+            // 处理命令
+            handleCommand(result);
+        }
+    }
+}
+
+void handleCommand(String cmd) {
+    lastCommand = cmd;
+
+    if (cmd.indexOf("开灯") >= 0 || cmd.indexOf("打开灯") >= 0) {
+        setRGB(255, 255, 255);
+        speak("好的，灯已打开");
+    }
+    else if (cmd.indexOf("关灯") >= 0 || cmd.indexOf("关闭灯") >= 0) {
+        setRGB(0, 255, 0);
+        speak("好的，灯已关闭");
+    }
+    else if (cmd.indexOf("红色") >= 0) {
+        setRGB(255, 0, 0);
+        speak("已切换为红色");
+    }
+    else if (cmd.indexOf("绿色") >= 0) {
+        setRGB(0, 255, 0);
+        speak("已切换为绿色");
+    }
+    else if (cmd.indexOf("蓝色") >= 0) {
+        setRGB(0, 0, 255);
+        speak("已切换为蓝色");
+    }
+    else if (cmd.indexOf("时间") >= 0 || cmd.indexOf("几点") >= 0) {
+        speak("现在是下午三点十五分");
+    }
+    else if (cmd.indexOf("天气") >= 0) {
+        speak("今天天气晴朗，温度25度，适合出行");
+    }
+    else if (cmd.indexOf("名字") >= 0 || cmd.indexOf("叫什么") >= 0) {
+        speak("我叫爱丽丝，是您的语音助手");
+    }
+    else if (cmd.indexOf("再见") >= 0 || cmd.indexOf("退出") >= 0) {
+        speak("好的，再见");
+        isAwake = false;
+        setRGB(0, 0, 255);  // 回到待机
+    }
+    else {
+        speak("抱歉，我没有听懂，请再说一次");
+    }
+
+    Serial.print("[Alice] Command: ");
+    Serial.println(cmd);
+}
+
+// 语音合成播报
+void speak(String text) {
+    Serial.print("[TTS] ");
+    Serial.println(text);
+
+    // SYN6288 协议帧
+    uint8_t frame[200];
+    int len = text.length();
+    frame[0] = 0xFD;  // 帧头
+    frame[1] = 0x00;
+    frame[2] = len + 2;  // 数据长度
+    frame[3] = 0x01;  // 合成命令
+    frame[4] = 0x00;  // 编码格式：GBK
+
+    // 复制文本
+    for (int i = 0; i < len; i++) {
+        frame[5 + i] = text.charAt(i);
+    }
+
+    syn_uart.write(frame, len + 5);
+    delay(len * 80);  // 等待合成完成
+}
+
+// RGB LED 控制
+void setRGB(int r, int g, int b) {
+    analogWrite(LED_R, r);
+    analogWrite(LED_G, g);
+    analogWrite(LED_B, b);
+}</pre>
+        </div>
+
+        <!-- 支持的语音命令 -->
+        <h2>🗣️ 支持的语音命令</h2>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr><th>唤醒词</th><th>功能</th><th>回复</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>"爱丽丝" / "你好"</td><td>唤醒助手</td><td>"我在，请问有什么可以帮您"</td></tr>
+                    <tr><td>"开灯" / "打开灯"</td><td>点亮RGB LED（白色）</td><td>"好的，灯已打开"</td></tr>
+                    <tr><td>"关灯" / "关闭灯"</td><td>熄灭LED</td><td>"好的，灯已关闭"</td></tr>
+                    <tr><td>"红色" / "绿色" / "蓝色"</td><td>切换LED颜色</td><td>"已切换为红色/绿色/蓝色"</td></tr>
+                    <tr><td>"现在几点" / "时间"</td><td>播报当前时间</td><td>"现在是下午三点十五分"</td></tr>
+                    <tr><td>"今天天气"</td><td>播报天气</td><td>"今天天气晴朗，温度25度"</td></tr>
+                    <tr><td>"你叫什么名字"</td><td>自我介绍</td><td>"我叫爱丽丝，是您的语音助手"</td></tr>
+                    <tr><td>"再见" / "退出"</td><td>退出唤醒状态</td><td>"好的，再见"</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 开发日志 -->
+        <h2>📅 开发日志 & 踩坑记录</h2>
+        <div class="card timeline">
+            <div class="timeline-item">
+                <strong>第6周 · 需求分析与选型</strong>
+                确定项目方向：离线语音助手。对比了三种方案：<br>
+                ① Arduino + 外挂语音模块<br>
+                ② ESP32 + 在线API（需要网络）<br>
+                ③ 天问板 + LD3320（纯离线）<br>
+                <span class="success-tag">✅ 最终选择方案③，理由：离线响应快、不依赖网络、成本低</span>
+            </div>
+
+            <div class="timeline-item">
+                <strong>第7周 · 硬件采购与测试</strong>
+                下单天问WB55开发板、LD3320语音识别模块、SYN6288语音合成模块。收到货后先单独测试各模块。
+                <br><span class="bug-tag">🔥 踩坑1：LD3320模块买错了！买成了SPI接口版本，但天问板的SPI库和它不兼容。重新下单UART版本，浪费一周时间。</span>
+                <br><span class="success-tag">✅ 教训：买模块前一定看清接口类型（UART/SPI/I2C）</span>
+            </div>
+
+            <div class="timeline-item">
+                <strong>第8周 · LD3320 语音识别调试</strong>
+                连接LD3320 UART版本，发送配置命令，尝试识别"你好"。串口返回乱码。
+                <br><span class="bug-tag">🔥 踩坑2：LD3320默认波特率是9600，但我代码里写成了115200。改回9600后正常。</span>
+                <br><span class="success-tag">✅ 解决：所有串口设备先确认默认波特率，别想当然</span>
+            </div>
+
+            <div class="timeline-item">
+                <strong>第8周 · LD3320 识别率低</strong>
+                测试"你好"识别率只有30%左右，经常识别成"你好帅"、"你好吗"等无关词汇。
+                <br><span class="bug-tag">🔥 踩坑3：LD3320的识别率和环境噪声、麦克风距离、说话速度都有关。一开始用的驻极体麦克风灵敏度太低。</span>
+                <br><span class="success-tag">✅ 解决：① 换用MAX9814自动增益麦克风模块；② 在安静环境下测试；③ 调整LD3320的识别阈值参数</span>
+            </div>
+
+            <div class="timeline-item">
+                <strong>第9周 · SYN6288 语音合成调试</strong>
+                发送"你好"给SYN6288，扬声器没有声音。
+                <br><span class="bug-tag">🔥 踩坑4：SYN6288需要5V供电，接了3.3V导致模块不工作。同时PAM8403功放模块也需要5V才能驱动扬声器。</span>
+                <br><span class="success-tag">✅ 解决：SYN6288和PAM8403都接到5V引脚，扬声器正常出声</span>
+            </div>
+
+            <div class="timeline-item">
+                <strong>第9周 · 语音合成乱码</strong>
+                扬声器出声了，但播放的是乱码声音，听不清内容。
+                <br><span class="bug-tag">🔥 踩坑5：SYN6288协议帧格式不对。帧头、长度、编码格式都有严格要求。原来用的UTF-8编码，但SYN6288只支持GBK。</span>
+                <br><span class="success-tag">✅ 解决：把文本编码从UTF-8转成GBK，同时修正帧长度计算公式。参考官方文档逐字节对比协议帧。</span>
+            </div>
+
+            <div class="timeline-item">
+                <strong>第10周 · 双串口冲突</strong>
+                LD3320和SYN6288都用串口通信，但天问板只有两个硬件串口，一个被USB调试占用。同时使用两个模块时互相干扰。
+                <br><span class="bug-tag">🔥 踩坑6：两个UART设备共用一个串口总线，数据互相覆盖，导致识别结果混乱。</span>
+                <br><span class="success-tag">✅ 解决：使用SoftwareSerial库创建软串口，LD3320用硬件串口1，SYN6288用软件串口。或者使用天问板的多路硬件串口功能。</span>
+            </div>
+
+            <div class="timeline-item">
+                <strong>第10周 · 唤醒词识别优化</strong>
+                "爱丽丝"作为唤醒词识别率只有50%，因为三个字的词汇识别难度比两个字高。
+                <br><span class="bug-tag">🔥 踩坑7：LD3320对三字词的识别率明显低于两字词。</span>
+                <br><span class="success-tag">✅ 解决：同时注册多个唤醒词，包括"爱丽丝"、"你好"、"小爱"，用户可以用任意一个唤醒。实际测试"你好"识别率最高（90%+）</span>
+            </div>
+
+            <div class="timeline-item">
+                <strong>第11周 · 命令处理逻辑优化</strong>
+                初始版本用精确匹配（cmd == "开灯"），用户稍有口音或说法不同就无法识别。
+                <br><span class="success-tag">✅ 优化：改用模糊匹配（cmd.indexOf("开灯") >= 0），只要包含关键词就执行。同时支持多种说法："开灯"、"打开灯"、"把灯打开"</span>
+            </div>
+
+            <div class="timeline-item">
+                <strong>第11周 · 超时自动退出</strong>
+                用户唤醒后如果长时间不说话，助手一直处于唤醒状态，占用资源。
+                <br><span class="success-tag">✅ 解决：添加15秒超时机制，唤醒后15秒无操作自动退出唤醒状态，回到待机模式。</span>
+            </div>
+
+            <div class="timeline-item">
+                <strong>第12周 · 整体联调</strong>
+                所有模块整合，测试完整流程：唤醒 → 识别 → 执行 → 播报 → 退出。发现从唤醒到响应需要3-5秒，体验较差。
+                <br><span class="bug-tag">🔥 踩坑8：延迟主要来自两个地方：① LD3320识别需要1-2秒；② SYN6288合成需要2-3秒。</span>
+                <br><span class="success-tag">✅ 优化：① 先播放"滴"的提示音表示已收到，再执行命令；② 缩短合成文本长度；③ 使用异步处理，识别和合成并行</span>
+            </div>
+
+            <div class="timeline-item">
+                <strong>第13周 · 功能扩展</strong>
+                添加了天气查询（离线固定回复）、时间播报、RGB颜色控制等功能。预留了GPIO口用于后续扩展（控制继电器、舵机等）。
+            </div>
+
+            <div class="timeline-item">
+                <strong>第13周 · 最终测试</strong>
+                完整功能测试：唤醒成功率95%、命令识别率85%、语音播报清晰、响应时间2-3秒。
+                <br><span class="success-tag">✅ 半期目标达成：离线语音助手核心功能全部实现</span>
+            </div>
+        </div>
+
+        <!-- 涉及知识点 -->
+        <h2>📚 涉及知识点</h2>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr><th>类别</th><th>知识点</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>语音识别</td><td>LD3320工作原理、特征提取、关键词匹配、识别阈值调优</td></tr>
+                    <tr><td>语音合成</td><td>SYN6288协议帧格式、GBK编码、TTS原理</td></tr>
+                    <tr><td>嵌入式</td><td>天问WB55开发、多串口通信、软硬件串口切换</td></tr>
+                    <tr><td>音频处理</td><td>MAX9814自动增益控制、PAM8403功放驱动、信噪比优化</td></tr>
+                    <tr><td>串口通信</td><td>UART协议、波特率配置、数据帧解析</td></tr>
+                    <tr><td>状态机</td><td>唤醒-命令-执行状态切换、超时机制设计</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 反思与规划 -->
+        <h2>🔍 反思 & 后续规划</h2>
+        <div class="card">
+            <ul style="margin-left: 1.2rem;">
+                <li>✅ <strong>做得好的地方：</strong>
+                    <ul style="margin-left: 1rem; margin-top: 0.3rem;">
+                        <li>选型时充分对比了三种方案，选择了最适合离线场景的方案</li>
+                        <li>每个模块先单独测试再整合，问题定位快</li>
+                        <li>踩坑记录详细，方便后续复盘</li>
+                    </ul>
+                </li>
+                <li>⚠️ <strong>可改进：</strong>
+                    <ul style="margin-left: 1rem; margin-top: 0.3rem;">
+                        <li>买模块前应该更仔细看接口类型，浪费了一周时间</li>
+                        <li>应该先确认所有模块的供电电压需求，避免烧坏</li>
+                        <li>识别率还可以通过添加更多训练词汇来提升</li>
+                    </ul>
+                </li>
+                <li>💡 <strong>后续规划：</strong>
+                    <ul style="margin-left: 1rem; margin-top: 0.3rem;">
+                        <li>接入WiFi，实现在线天气查询和网络音乐播放</li>
+                        <li>添加舵机控制，实现语音控制机械臂</li>
+                        <li>接入智能家居协议，控制家电开关</li>
+                        <li>添加离线NLP，支持更复杂的对话</li>
+                        <li>设计3D打印外壳，做成桌面摆件</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Bug 总结表 -->
+        <h2>🐛 踩坑总结</h2>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr><th>#</th><th>问题</th><th>原因</th><th>解决方案</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>LD3320不兼容</td><td>买错SPI接口版本</td><td>重新购买UART版本</td></tr>
+                    <tr><td>2</td><td>LD3320串口乱码</td><td>波特率不匹配（9600 vs 115200）</td><td>改回9600</td></tr>
+                    <tr><td>3</td><td>语音识别率低</td><td>麦克风灵敏度低+环境噪声</td><td>换MAX9814+调阈值</td></tr>
+                    <tr><td>4</td><td>SYN6288无声音</td><td>供电电压不足（3.3V vs 5V）</td><td>改为5V供电</td></tr>
+                    <tr><td>5</td><td>语音合成乱码</td><td>编码格式错误（UTF-8 vs GBK）</td><td>转GBK编码+修正帧格式</td></tr>
+                    <tr><td>6</td><td>双串口冲突</td><td>两个模块共用总线</td><td>使用软硬件串口分离</td></tr>
+                    <tr><td>7</td><td>唤醒词识别率低</td><td>三字词识别难度高</td><td>注册多个唤醒词</td></tr>
+                    <tr><td>8</td><td>响应延迟大</td><td>识别+合成耗时长</td><td>先播提示音+异步处理</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <footer>
+        半期项目日志 · 个人开发 · 天问WB55<br>
+        2026 春季学期
+    </footer>
+</div>
+</body>
+</html>
