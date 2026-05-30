@@ -48,7 +48,7 @@
                     │                      ESP32-C3 SuperMini                         │
                     │                                                                 │
                     │    ┌─────┐    ┌─────┐    ┌─────┐    ┌─────┐    ┌─────┐         │
-                    │    │ 5V  │    │ GND │    │ D4  │    │ D5  │    │ D6  │         │
+                    │    │ 5V  │    │ GND │    │ D5  │    │ D18 │    │ D19 │         │
                     │    └──┬──┘    └──┬──┘    └──┬──┘    └──┬──┘    └──┬──┘         │
                     │       │          │          │          │          │             │
                     └───────┼──────────┼──────────┼──────────┼──────────┼─────────────┘
@@ -89,7 +89,7 @@
                                │    │    │     │                                      │
                                │    │    │     │                                      │
                                ▼    ▼    ▼     ▼                                      │
-                              5V  GND  GPIO4  GPIO5                                   │
+                              5V  GND  GPIO5  GPIO18                                  │
                                     │                                                  │
                                     └──────────────────────────────────────────────────┘
                                              GND (共地)
@@ -101,10 +101,10 @@
     │                                                                                     │
     │   ESP32-C3          HC-SR04                 ESP32-C3          LED                  │
     │   ────────          ──────                  ────────          ───                  │
-    │   5V/VIN     ───►   VCC (红)               GPIO 6    ───►   220Ω电阻 ───► LED+   │
+    │   5V/VIN     ───►   VCC (红)               GPIO 19   ───►   220Ω电阻 ───► LED+   │
     │   GND        ───►   GND (黑)               GND       ───►   LED- (短脚)          │
-    │   GPIO 4     ───►   Trig (绿)                                                            │
-    │   GPIO 5     ◄───   Echo (蓝)                                                            │
+    │   GPIO 5     ───►   Trig (绿)                                                            │
+    │   GPIO 18    ◄───   Echo (蓝)                                                            │
     │                                                                                     │
     └─────────────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -115,9 +115,9 @@
 |------|------|----------|------|
 | HC-SR04 | VCC | 5V / VIN | - |
 | HC-SR04 | GND | GND | - |
-| HC-SR04 | Trig | D4 | GPIO 4 |
-| HC-SR04 | Echo | D5 | GPIO 5 |
-| LED | 正极(+) | 220Ω电阻 → D6 | GPIO 6 |
+| HC-SR04 | Trig | D5 | GPIO 5 |
+| HC-SR04 | Echo | D18 | GPIO 18 |
+| LED | 正极(+) | 220Ω电阻 → D19 | GPIO 19 |
 | LED | 负极(-) | GND | - |
 
 ### 接线要点
@@ -144,71 +144,36 @@ HC-SR04 Echo ──── 1kΩ ──┬── ESP32-C3 GPIO5
 ## 核心代码
 
 ```cpp
-// ESP32-C3 超声波测距 + 单 LED 提示
-// 团队：吴天鹏、符永儒、司淼清、吴辉
-
-#define TRIG_PIN  4
-#define ECHO_PIN  5
-#define LED_PIN   6
-#define THRESHOLD 30  // 距离阈值（cm）
+#define TRIG_PIN  5
+#define ECHO_PIN  18
+#define LED_PIN   19
 
 void setup() {
   Serial.begin(115200);
   pinMode(TRIG_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
   pinMode(LED_PIN, OUTPUT);
-  Serial.println("=== 智能超声波防撞提示器 ===");
-  Serial.println("Ready");
+  Serial.println("Ultrasonic ready");
 }
 
-// 单次测距
-float singleMeasure() {
+void loop() {
   digitalWrite(TRIG_PIN, LOW);
   delayMicroseconds(2);
   digitalWrite(TRIG_PIN, HIGH);
   delayMicroseconds(10);
   digitalWrite(TRIG_PIN, LOW);
-  long duration = pulseIn(ECHO_PIN, HIGH, 30000);
-  if (duration <= 0) return 400;
-  return duration * 0.034 / 2;
-}
 
-// 中位数滤波：连续读5次取中间值
-float getStableDistance() {
-  float readings[5];
-  for (int i = 0; i < 5; i++) {
-    readings[i] = singleMeasure();
-    delay(30);
-  }
-  // 冒泡排序
-  for (int i = 0; i < 4; i++)
-    for (int j = 0; j < 4 - i; j++)
-      if (readings[j] > readings[j + 1]) {
-        float t = readings[j];
-        readings[j] = readings[j + 1];
-        readings[j + 1] = t;
-      }
-  return readings[2];  // 返回中位数
-}
+  long duration = pulseIn(ECHO_PIN, HIGH);
+  float distance = duration * 0.034 / 2;
 
-void loop() {
-  float distance = getStableDistance();
-  if (distance <= 0 || distance > 400) {
-    Serial.println("Out of range");
-    digitalWrite(LED_PIN, LOW);
-    delay(200);
-    return;
-  }
   Serial.print("Distance: ");
-  Serial.print(distance, 1);
-  Serial.print(" cm  ");
-  for (int i = 0; i < (int)distance / 2 && i < 40; i++)
-    Serial.print("█");
-  Serial.println();
-  if (distance < THRESHOLD) {
-    digitalWrite(LED_PIN, HIGH);
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  if (distance > 0 && distance < 30) {
+    digitalWrite(LED_PIN, HIGH);   // 点亮LED
   } else {
-    digitalWrite(LED_PIN, LOW);
+    digitalWrite(LED_PIN, LOW);    // 熄灭LED
   }
   delay(200);
 }
