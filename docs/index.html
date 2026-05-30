@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>吴天鹏 · 从代码到实物</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: #fafafa;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+        .header {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 4rem 2rem 2rem;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+        .header .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+        .header .info {
+            color: #999;
+            font-size: 0.9rem;
+        }
+        .header a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+        .header a:hover { text-decoration: underline; }
+
+        .grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .card-visual {
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .card-body {
+            padding: 1.2rem;
+        }
+        .card-body h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+        .card-body p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .card-body .tag {
+            display: inline-block;
+            background: #f0f0f0;
+            padding: 0.15rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #555;
+            margin-top: 0.5rem;
+            margin-right: 0.3rem;
+        }
+        .card-body .tag.final { background: #dbeafe; color: #1d4ed8; }
+        .card-body .tag.midterm { background: #fce7f3; color: #be185d; }
+
+        .color-1 { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .color-2 { background: linear-gradient(135deg, #f093fb, #f5576c); }
+        .color-3 { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .color-4 { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+        .color-5 { background: linear-gradient(135deg, #fa709a, #fee140); }
+        .color-6 { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+        .color-7 { background: linear-gradient(135deg, #fccb90, #d57eeb); }
+        .color-8 { background: linear-gradient(135deg, #e0c3fc, #8ec5fc); }
+        .color-9 { background: linear-gradient(135deg, #f5576c, #ff6a00); }
+        .color-10 { background: linear-gradient(135deg, #0ba360, #3cba92); }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+            font-size: 0.85rem;
+            border-top: 1px solid #eee;
+        }
+
+        @media (max-width: 640px) {
+            .header h1 { font-size: 1.8rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>吴天鹏</h1>
+    <p class="subtitle">学号：2024112510 · 计算机2024-1班</p>
+    <p class="info">《从代码到实物：造你所想》2026 春季学期</p>
+    <p class="info" style="margin-top: 0.5rem;">
+        <a href="https://github.com/T1per07/UltrasonicDistanceMeter">GitHub</a>
+    </p>
+</div>
+
+<div class="grid">
+
+    <!-- Final Project -->
+    <a class="card" href="log.html">
+        <div class="card-visual color-1">
+            <span style="font-size: 3.5rem;">📡</span>
+        </div>
+        <div class="card-body">
+            <h3>超声波测距仪</h3>
+            <p>ESP32-C3 + HC-SR04 + LED，距离小于30cm自动亮灯提醒</p>
+            <span class="tag final">期末项目</span>
+            <span class="tag">Hackathon</span>
+        </div>
+    </a>
+
+    <!-- Midterm Project -->
+    <a class="card" href="log.html#midterm">
+        <div class="card-visual color-2">
+            <span style="font-size: 3.5rem;">🤖</span>
+        </div>
+        <div class="card-body">
+            <h3>爱丽丝语音助手</h3>
+            <p>天问WB55 + LD3320 + SYN6288，离线语音唤醒与控制</p>
+            <span class="tag midterm">期中项目</span>
+            <span class="tag">语音识别</span>
+        </div>
+    </a>
+
+    <!-- Week 1 -->
+    <a class="card" href="#week1">
+        <div class="card-visual color-3">
+            <span style="font-size: 3.5rem;">📐</span>
+        </div>
+        <div class="card-body">
+            <h3>计算机辅助设计</h3>
+            <p>Fusion 360 建模入门，绘制第一个3D零件</p>
+            <span class="tag">Week 1</span>
+            <span class="tag">CAD</span>
+        </div>
+    </a>
+
+    <!-- Week 2 -->
+    <a class="card" href="#week2">
+        <div class="card-visual color-4">
+            <span style="font-size: 3.5rem;">✂️</span>
+        </div>
+        <div class="card-body">
+            <h3>激光切割与切割</h3>
+            <p>使用激光切割机制作亚克力盒子</p>
+            <span class="tag">Week 2</span>
+            <span class="tag">激光切割</span>
+        </div>
+    </a>
+
+    <!-- Week 3 -->
+    <a class="card" href="#week3">
+        <div class="card-visual color-5">
+            <span style="font-size: 3.5rem;">🖨️</span>
+        </div>
+        <div class="card-body">
+            <h3>3D扫描与打印</h3>
+            <p>学习FDM打印原理，打印第一个原型件</p>
+            <span class="tag">Week 3</span>
+            <span class="tag">3D打印</span>
+        </div>
+    </a>
+
+    <!-- Week 4 -->
+    <a class="card" href="#week4">
+        <div class="card-visual color-6">
+            <span style="font-size: 3.5rem;">🔌</span>
+        </div>
+        <div class="card-body">
+            <h3>电子设计入门</h3>
+            <p>使用KiCad绘制第一个PCB电路板</p>
+            <span class="tag">Week 4</span>
+            <span class="tag">PCB设计</span>
+        </div>
+    </a>
+
+    <!-- Week 5 -->
+    <a class="card" href="#week5">
+        <div class="card-visual color-7">
+            <span style="font-size: 3.5rem;">⚡</span>
+        </div>
+        <div class="card-body">
+            <h3>电子制作</h3>
+            <p>焊接练习，制作Arduino最小系统板</p>
+            <span class="tag">Week 5</span>
+            <span class="tag">焊接</span>
+        </div>
+    </a>
+
+    <!-- Week 6 -->
+    <a class="card" href="#week6">
+        <div class="card-visual color-8">
+            <span style="font-size: 3.5rem;">🔧</span>
+        </div>
+        <div class="card-body">
+            <h3>嵌入式编程</h3>
+            <p>Arduino/ESP32基础，GPIO控制与串口通信</p>
+            <span class="tag">Week 6</span>
+            <span class="tag">嵌入式</span>
+        </div>
+    </a>
+
+    <!-- Week 7 -->
+    <a class="card" href="#week7">
+        <div class="card-visual color-9">
+            <span style="font-size: 3.5rem;">📡</span>
+        </div>
+        <div class="card-body">
+            <h3>输入设备</h3>
+            <p>传感器原理与数据采集（超声波、红外、温湿度）</p>
+            <span class="tag">Week 7</span>
+            <span class="tag">传感器</span>
+        </div>
+    </a>
+
+    <!-- Week 8 -->
+    <a class="card" href="#week8">
+        <div class="card-visual color-10">
+            <span style="font-size: 3.5rem;">💡</span>
+        </div>
+        <div class="card-body">
+            <h3>输出设备</h3>
+            <p>LED、蜂鸣器、OLED显示屏、舵机控制</p>
+            <span class="tag">Week 8</span>
+            <span class="tag">执行器</span>
+        </div>
+    </a>
+
+</div>
+
+<footer>
+    《从代码到实物：造你所想》 · 西南交通大学 · 2026 春季学期<br>
+    教学班：计算机2024-1、2班 · 教室 X9302
+</footer>
+
+</body>
+</html>
